@@ -1,0 +1,7 @@
+{
+  "java.project.sourcePaths": ["java"],
+  "java.project.outputPath": "output",
+  "java.project.referencedLibraries": [
+    "java/jsch-0.1.55.jar"
+  ]
+}

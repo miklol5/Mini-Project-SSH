@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SSH Web Terminal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Consolas, monospace;
+      background: #0d1117;
+      color: #e6edf3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .terminal {
+      width: 800px;
+      background: #161b22;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .terminal-header {
+      background: #21262d;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .dot {
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
+
+    .terminal-body {
+      padding: 15px;
+      flex: 1;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+
+    .terminal-input {
+      display: flex;
+      border-top: 1px solid #30363d;
+    }
+
+    .prompt {
+      padding: 10px;
+      color: #58a6ff;
+    }
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #e6edf3;
+      padding: 10px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      outline: none;
+    }
+
+    button {
+      background: #238636;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2ea043;
+    }
+  </style>
+</head>
+<body>
+
+<div class="terminal">
+
+  <div class="terminal-header">
+    <div class="dot red"></div>
+    <div class="dot yellow"></div>
+    <div class="dot green"></div>
+  </div>
+
+  <div id="output" class="terminal-body">
+Welcome to SSH Web Terminal
+Type a command and press Run
+  </div>
+
+  <div class="terminal-input">
+    <div class="prompt">$</div>
+    <input id="command" type="text" placeholder="Enter command...">
+    <button onclick="runCommand()">Run</button>
+  </div>
+
+</div>
+
+<script>
+async function runCommand() {
+
+  const cmdInput = document.getElementById("command");
+  const output = document.getElementById("output");
+
+  const command = cmdInput.value;
+
+  if (!command) return;
+
+  output.innerHTML += "\n$ " + command + "\n";
+
+  cmdInput.value = "";
+
+  try {
+
+    const response = await fetch("../backend/run.php?cmd=" + encodeURIComponent(command))
+
+    const result = await response.text();
+
+    output.innerHTML += result + "\n";
+
+    output.scrollTop = output.scrollHeight;
+
+  } catch (error) {
+
+    output.innerHTML += "Error connecting to server\n";
+
+  }
+}
+
+
+// run command on enter key
+
+document.getElementById("command").addEventListener("keypress", function(e) {
+
+  if (e.key === "Enter") {
+
+    runCommand();
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>

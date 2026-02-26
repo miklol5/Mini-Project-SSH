@@ -1,0 +1,14 @@
+{
+  "uptime": {
+    "cmd": "uptime",
+    "description": "แสดง uptime ของ server"
+  },
+  "pwd": {
+    "cmd": "pwd",
+    "description": "แสดง directory ปัจจุบัน"
+  },
+  "ls": {
+    "cmd": "ls -la",
+    "description": "แสดงรายการไฟล์"
+  }
+}
