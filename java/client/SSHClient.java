@@ -37,26 +37,23 @@ public class SSHClient {
             channel.setCommand(command);
 
             InputStream in = channel.getInputStream();
+            InputStream err = channel.getErrStream();
 
             channel.connect();
 
-            byte[] tmp = new byte[1024];
+            ByteArrayOutputStream response = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int read;
 
-            while (true) {
-
-                while (in.available() > 0) {
-
-                    int i = in.read(tmp, 0, 1024);
-
-                    if (i < 0)
-                        break;
-
-                    System.out.print(new String(tmp, 0, i));
-                }
-
-                if (channel.isClosed())
-                    break;
+            while ((read = in.read(buffer)) != -1) {
+                response.write(buffer, 0, read);
             }
+
+            while ((read = err.read(buffer)) != -1) {
+                response.write(buffer, 0, read);
+            }
+
+            System.out.print(response.toString());
 
             channel.disconnect();
             session.disconnect();

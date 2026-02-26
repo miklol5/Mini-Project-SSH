@@ -110,47 +110,38 @@ Type a command and press Run
 <script>
 async function runCommand() {
 
-  const cmdInput = document.getElementById("command");
-  const output = document.getElementById("output");
+    const cmdInput = document.getElementById("command");
+    const output = document.getElementById("output");
 
-  const command = cmdInput.value;
+    const command = cmdInput.value.trim();
 
-  if (!command) return;
+    if (!command) return;
 
-  output.innerHTML += "\n$ " + command + "\n";
+    // แสดง command
+    output.innerHTML += "\n$ " + command + "\n";
 
-  cmdInput.value = "";
+    // ล้าง input
+    cmdInput.value = "";
 
-  try {
+    try {
 
-    const response = await fetch("../backend/run.php?cmd=" + encodeURIComponent(command))
+        // เรียก backend
+        const response = await fetch("../backend/run.php?cmd=" + encodeURIComponent(command));
 
-    const result = await response.text();
+        const result = await response.text();
 
-    output.innerHTML += result + "\n";
+        // แสดงผลลัพธ์
+        output.innerHTML += result + "\n";
 
-    output.scrollTop = output.scrollHeight;
+        // scroll ลงล่าง
+        output.scrollTop = output.scrollHeight;
 
-  } catch (error) {
+    } catch (error) {
 
-    output.innerHTML += "Error connecting to server\n";
+        output.innerHTML += "Error: Cannot connect to backend\n";
 
-  }
+    }
 }
-
-
-// run command on enter key
-
-document.getElementById("command").addEventListener("keypress", function(e) {
-
-  if (e.key === "Enter") {
-
-    runCommand();
-
-  }
-
-});
-
 </script>
 
 </body>

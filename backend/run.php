@@ -1,23 +1,21 @@
 <?php
+header("Content-Type: text/plain");
 
 if (!isset($_GET['cmd'])) {
-    echo "No command";
+    echo "No command provided.";
     exit;
 }
 
 $cmd = $_GET['cmd'];
 
-// path ไปยัง java folder
-$javaPath = "../java";
+$javaPath = __DIR__ . '/../java';
 
-// command เรียก SSHClient
-$command = "cd $javaPath && java -cp \"lib/*;.\" client.SSHClient $cmd";
+$command = 'cd ' . escapeshellarg($javaPath) .
+           ' && java -cp "lib/*;." client.SSHClient ' .
+           escapeshellarg($cmd) .
+           ' 2>&1';
 
-// execute command
 $output = shell_exec($command);
 
-echo "<pre>";
 echo $output;
-echo "</pre>";
-
 ?>
