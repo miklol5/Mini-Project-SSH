@@ -1,3 +1,4 @@
+// กำหนดคำอธิบายของแต่ละคำสั่งที่จะแสดงในหน้าเว็บ
 const descriptions = {
 
     "uptime": "แสดงระยะเวลาที่ server เปิดใช้งาน และ load average",
@@ -10,6 +11,7 @@ const descriptions = {
 
 };
 
+// ฟังก์ชันแสดงคำอธิบายตามคำสั่งที่เลือก
 function showDescription() {
 
     let cmd = document.getElementById("command").value;
@@ -19,6 +21,7 @@ function showDescription() {
 
 }
 
+// ฟังก์ชันส่งข้อมูลไปยัง backend เพื่อรันคำสั่งผ่าน SSH
 async function runCommand() {
 
     let ip = document.getElementById("ip").value;
@@ -37,4 +40,5 @@ async function runCommand() {
 
 }
 
+// เรียกใช้งานเพื่อแสดงคำอธิบายเริ่มต้นเมื่อโหลดหน้าเว็บ
 showDescription();

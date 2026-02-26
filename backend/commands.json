@@ -1,4 +1,4 @@
-{
+ {
   "uptime": {
     "cmd": "uptime",
     "description": "แสดง uptime ของ server"

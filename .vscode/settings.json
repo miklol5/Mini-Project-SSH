@@ -1,3 +1,4 @@
+// ไฟล์ตั้งค่าโปรเจกต์ Java กำหนดโฟลเดอร์ซอร์ส โฟลเดอร์ผลลัพธ์ และไลบรารี SSH (jsch)
 {
   "java.project.sourcePaths": ["java"],
   "java.project.outputPath": "output",
