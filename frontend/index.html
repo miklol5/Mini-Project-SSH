@@ -1,148 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SSH Web Terminal</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Consolas, monospace;
-      background: #0d1117;
-      color: #e6edf3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <title>SSH Web Terminal</title>
 
-    .terminal {
-      width: 800px;
-      background: #161b22;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+    <style>
+      body {
+        margin: 0;
+        font-family: Consolas, monospace;
+        background: #0d1117;
+        color: #e6edf3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
 
-    .terminal-header {
-      background: #21262d;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-    }
+      .terminal {
+        width: 800px;
+        background: #161b22;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .dot {
-      height: 12px;
-      width: 12px;
-      border-radius: 50%;
-      margin-right: 6px;
-    }
+      .terminal-header {
+        background: #21262d;
+        padding: 10px;
+        display: flex;
+      }
 
-    .red { background: #ff5f56; }
-    .yellow { background: #ffbd2e; }
-    .green { background: #27c93f; }
+      .dot {
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
 
-    .terminal-body {
-      padding: 15px;
-      flex: 1;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
+      .red {
+        background: #ff5f56;
+      }
+      .yellow {
+        background: #ffbd2e;
+      }
+      .green {
+        background: #27c93f;
+      }
 
-    .terminal-input {
-      display: flex;
-      border-top: 1px solid #30363d;
-    }
+      .terminal-body {
+        padding: 15px;
+        flex: 1;
+        overflow-y: auto;
+        white-space: pre-wrap;
+      }
 
-    .prompt {
-      padding: 10px;
-      color: #58a6ff;
-    }
+      .input-area {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-    input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #e6edf3;
-      padding: 10px;
-      font-family: Consolas, monospace;
-      font-size: 14px;
-      outline: none;
-    }
+      input,
+      select {
+        padding: 10px;
+        background: #1e1e1e;
+        color: white;
+        border: none;
+      }
 
-    button {
-      background: #238636;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
+      button {
+        background: #238636;
+        border: none;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+      }
 
-    button:hover {
-      background: #2ea043;
-    }
-  </style>
-</head>
-<body>
+      button:hover {
+        background: #2ea043;
+      }
 
-<div class="terminal">
+      #description {
+        color: #aaa;
+        font-size: 13px;
+      }
+    </style>
+  </head>
 
-  <div class="terminal-header">
-    <div class="dot red"></div>
-    <div class="dot yellow"></div>
-    <div class="dot green"></div>
-  </div>
+  <body>
+    <div class="terminal">
+      <div class="terminal-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
 
-  <div id="output" class="terminal-body">
-Welcome to SSH Web Terminal
-Type a command and press Run
-  </div>
+      <div id="output" class="terminal-body">Welcome to SSH Web Terminal</div>
 
-  <div class="terminal-input">
-    <div class="prompt">$</div>
-    <input id="command" type="text" placeholder="Enter command...">
-    <button onclick="runCommand()">Run</button>
-  </div>
+      <div class="input-area">
+        <input id="ip" type="text" placeholder="Server IP" />
 
-</div>
+        <input id="user" type="text" placeholder="Username" />
 
-<script>
-async function runCommand() {
+        <input id="pass" type="password" placeholder="Password" />
 
-    const cmdInput = document.getElementById("command");
-    const output = document.getElementById("output");
+        <select id="command" onchange="showDescription()">
+          <option value="">-- Select Command --</option>
 
-    const command = cmdInput.value.trim();
+          <option value="uptime">uptime</option>
 
-    if (!command) return;
+          <option value="df -h">df -h</option>
 
-    // แสดง command
-    output.innerHTML += "\n$ " + command + "\n";
+          <option value="free -m">free -m</option>
 
-    // ล้าง input
-    cmdInput.value = "";
+          <option value="whoami">whoami</option>
+        </select>
 
-    try {
+        <div id="description">Select command to see description</div>
 
-        // เรียก backend
-        const response = await fetch("../backend/run.php?cmd=" + encodeURIComponent(command));
+        <button onclick="runCommand()">Run</button>
+      </div>
+    </div>
 
-        const result = await response.text();
+    <script>
+      function showDescription() {
+        const cmd = document.getElementById("command").value;
+        const desc = document.getElementById("description");
 
-        // แสดงผลลัพธ์
-        output.innerHTML += result + "\n";
+        if (cmd === "uptime")
+          desc.innerText = "แสดงเวลาที่ server ทำงาน และ load average";
+        else if (cmd === "df -h") desc.innerText = "แสดงพื้นที่ disk";
+        else if (cmd === "free -m") desc.innerText = "แสดง RAM";
+        else if (cmd === "whoami") desc.innerText = "แสดง user ปัจจุบัน";
+        else desc.innerText = "Select command to see description";
+      }
 
-        // scroll ลงล่าง
-        output.scrollTop = output.scrollHeight;
+      async function runCommand() {
+        const output = document.getElementById("output");
 
-    } catch (error) {
+        const ip = document.getElementById("ip").value.trim();
+        const user = document.getElementById("user").value.trim();
+        const pass = document.getElementById("pass").value.trim();
+        const cmd = document.getElementById("command").value.trim();
 
-        output.innerHTML += "Error: Cannot connect to backend\n";
+        if (!ip || !user || !pass || !cmd) {
+          alert("กรอกข้อมูลให้ครบ");
+          return;
+        }
 
-    }
-}
-</script>
+        output.innerHTML += "\n$ " + cmd + "\n";
 
-</body>
+        try {
+          const response = await fetch(
+            "http://localhost:8080/run.php" +
+              "?ip=" +
+              encodeURIComponent(ip) +
+              "&user=" +
+              encodeURIComponent(user) +
+              "&pass=" +
+              encodeURIComponent(pass) +
+              "&cmd=" +
+              encodeURIComponent(cmd),
+          );
+
+          const result = await response.text();
+
+          output.innerHTML += result + "\n";
+
+          output.scrollTop = output.scrollHeight;
+        } catch (e) {
+          output.innerHTML += "Error connecting backend\n";
+        }
+      }
+    </script>
+  </body>
 </html>

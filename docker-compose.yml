@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  ssh-server:
+    build: ./docker-ssh
+    container_name: ssh-server
+    ports:
+      - "2222:22"
+    networks:
+      - mynet
+
+  web:
+    build: ./backend
+    container_name: php-backend
+    ports:
+      - "8080:80"
+    depends_on:
+      - ssh-server
+    volumes:
+      - ./backend:/var/www/html
+      - ./frontend:/var/www/html/frontend
+    networks:
+      - mynet
+
+networks:
+  mynet:

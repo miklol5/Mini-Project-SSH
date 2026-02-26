@@ -1,21 +1,40 @@
 <?php
 header("Content-Type: text/plain");
 
-if (!isset($_GET['cmd'])) {
-    echo "No command provided.";
+$ip   = $_GET['ip']   ?? '';
+$user = $_GET['user'] ?? '';
+$pass = $_GET['pass'] ?? '';
+$cmd  = $_GET['cmd']  ?? '';
+
+if (!$ip || !$user || !$pass || !$cmd) {
+    echo "Missing parameters";
     exit;
 }
 
-$cmd = $_GET['cmd'];
+// connect
+$connection = ssh2_connect($ip, 22);
 
-$javaPath = __DIR__ . '/../java';
+if (!$connection) {
+    echo "Connection failed";
+    exit;
+}
 
-$command = 'cd ' . escapeshellarg($javaPath) .
-           ' && java -cp "lib/*;." client.SSHClient ' .
-           escapeshellarg($cmd) .
-           ' 2>&1';
+// login
+if (!ssh2_auth_password($connection, $user, $pass)) {
+    echo "Authentication failed";
+    exit;
+}
 
-$output = shell_exec($command);
+// execute
+$stream = ssh2_exec($connection, $cmd);
+
+if (!$stream) {
+    echo "Command execution failed";
+    exit;
+}
+
+stream_set_blocking($stream, true);
+$output = stream_get_contents($stream);
 
 echo $output;
 ?>
