@@ -5,6 +5,7 @@
     <title>SSH Web Terminal</title>
 
     <style>
+      /* ส่วนกำหนดรูปแบบหน้าตาเว็บให้เหมือน Terminal */
       body {
         margin: 0;
         font-family: Consolas, monospace;
@@ -39,15 +40,9 @@
         margin-right: 6px;
       }
 
-      .red {
-        background: #ff5f56;
-      }
-      .yellow {
-        background: #ffbd2e;
-      }
-      .green {
-        background: #27c93f;
-      }
+      .red { background: #ff5f56; }
+      .yellow { background: #ffbd2e; }
+      .green { background: #27c93f; }
 
       .terminal-body {
         padding: 15px;
@@ -98,24 +93,21 @@
         <div class="dot green"></div>
       </div>
 
+      <!-- พื้นที่แสดงผลลัพธ์จากคำสั่ง SSH -->
       <div id="output" class="terminal-body">Welcome to SSH Web Terminal</div>
 
       <div class="input-area">
+        <!-- ช่องกรอกข้อมูลสำหรับเชื่อมต่อ Server -->
         <input id="ip" type="text" placeholder="Server IP" />
-
         <input id="user" type="text" placeholder="Username" />
-
         <input id="pass" type="password" placeholder="Password" />
 
+        <!-- เมนูเลือกคำสั่งที่ต้องการรัน -->
         <select id="command" onchange="showDescription()">
           <option value="">-- Select Command --</option>
-
           <option value="uptime">uptime</option>
-
           <option value="df -h">df -h</option>
-
           <option value="free -m">free -m</option>
-
           <option value="whoami">whoami</option>
         </select>
 
@@ -126,6 +118,7 @@
     </div>
 
     <script>
+      // ฟังก์ชันแสดงคำอธิบายของคำสั่งที่เลือก
       function showDescription() {
         const cmd = document.getElementById("command").value;
         const desc = document.getElementById("description");
@@ -138,6 +131,7 @@
         else desc.innerText = "Select command to see description";
       }
 
+      // ฟังก์ชันส่งข้อมูลไปยัง backend (PHP) เพื่อรันคำสั่งผ่าน SSH
       async function runCommand() {
         const output = document.getElementById("output");
 
@@ -146,6 +140,7 @@
         const pass = document.getElementById("pass").value.trim();
         const cmd = document.getElementById("command").value.trim();
 
+        // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
         if (!ip || !user || !pass || !cmd) {
           alert("กรอกข้อมูลให้ครบ");
           return;
@@ -154,6 +149,7 @@
         output.innerHTML += "\n$ " + cmd + "\n";
 
         try {
+          // เรียกใช้งานไฟล์ run.php พร้อมส่งพารามิเตอร์ผ่าน URL
           const response = await fetch(
             "http://localhost:8080/run.php" +
               "?ip=" +

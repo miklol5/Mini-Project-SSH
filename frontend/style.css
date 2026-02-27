@@ -1,15 +1,18 @@
+/* กำหนดรูปแบบพื้นฐานของหน้าเว็บ */
 body {
     font-family: Arial;
     text-align: center;
     background: #f0f0f0;
 }
 
+/* กำหนดรูปแบบปุ่มกด */
 button {
     padding: 10px 20px;
     margin: 10px;
     font-size: 16px;
 }
 
+/* กำหนดรูปแบบพื้นที่แสดงผลลัพธ์ (ลักษณะคล้าย Terminal) */
 pre {
     background: black;
     color: lime;

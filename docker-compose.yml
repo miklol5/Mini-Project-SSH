@@ -1,26 +1,31 @@
 version: '3'
 
+# กำหนดบริการ (containers) ที่จะรันในระบบ
 services:
+
+  # Container สำหรับ SSH Server
   ssh-server:
     build: ./docker-ssh
     container_name: ssh-server
     ports:
-      - "2222:22"
+      - "2222:22"  # เปิดพอร์ต 2222 ของเครื่องเราไปยังพอร์ต 22 ใน container
     networks:
       - mynet
 
+  # Container สำหรับ Web Backend (PHP + Apache)
   web:
     build: ./backend
     container_name: php-backend
     ports:
-      - "8080:80"
+      - "8080:80"  # เปิดเว็บผ่าน http://localhost:8080
     depends_on:
-      - ssh-server
+      - ssh-server  # ให้ ssh-server ทำงานก่อน
     volumes:
       - ./backend:/var/www/html
       - ./frontend:/var/www/html/frontend
     networks:
       - mynet
 
+# กำหนด network ภายในสำหรับให้ container ติดต่อกันได้
 networks:
   mynet:
