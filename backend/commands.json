@@ -1,14 +1,18 @@
- {
+{
   "uptime": {
     "cmd": "uptime",
     "description": "แสดง uptime ของ server"
   },
-  "pwd": {
-    "cmd": "pwd",
-    "description": "แสดง directory ปัจจุบัน"
+  "df": {
+    "cmd": "df -h",
+    "description": "แสดงพื้นที่ disk"
   },
-  "ls": {
-    "cmd": "ls -la",
-    "description": "แสดงรายการไฟล์"
+  "free": {
+    "cmd": "free -m",
+    "description": "แสดงการใช้ RAM (MB)"
+  },
+  "whoami": {
+    "cmd": "whoami",
+    "description": "แสดงชื่อ user ที่ login อยู่"
   }
 }

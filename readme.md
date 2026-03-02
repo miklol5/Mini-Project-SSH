@@ -2,211 +2,139 @@
 
 ## ภาพรวมโปรเจกต์
 
-โปรเจกต์นี้เป็น Web Terminal ที่สามารถสั่งคำสั่ง SSH ไปยัง Server ผ่านหน้าเว็บ โดยใช้:
+โปรเจกต์นี้เป็นระบบ Web Terminal ที่สามารถสั่งคำสั่ง SSH ไปยัง Server ผ่านหน้าเว็บได้ โดยทำงานอยู่บน Docker ทุกส่วนของระบบ
 
-* Frontend: HTML, CSS, JavaScript
-* Backend: PHP (ssh2)
-* SSH Server: Ubuntu + OpenSSH (Docker)
-* Container: Docker + Docker Compose
+เทคโนโลยีที่ใช้:
+- Frontend: HTML, CSS, JavaScript
+- Backend: PHP (ssh2)
+- SSH Server: Ubuntu + OpenSSH (Docker)
+- Container Management: Docker + Docker Compose
 
 ---
 
 ## โครงสร้างโปรเจกต์
 
-```
 Mini-Project-SSH/
 │
 ├── frontend/
-│   └── index.html
+│   ├── index.html
+│   ├── script.js
+│   └── style.css
 │
 ├── backend/
 │   ├── Dockerfile
-│   └── run.php
+│   ├── run.php
+│   └── commands.json
 │
 ├── docker-ssh/
 │   └── Dockerfile
 │
-└── docker-compose.yml
-```
-
----
-
-## สิ่งที่ต้องติดตั้งก่อน
-
-* Docker Desktop
-* Docker Compose (มาพร้อม Docker Desktop)
-* Web Browser เช่น Chrome
+├── docker-compose.yml
+└── readme.md
 
 ---
 
 ## วิธีรันโปรเจกต์
 
-### 1. เปิด Terminal ในโฟลเดอร์โปรเจกต์
+1) เข้าโฟลเดอร์โปรเจกต์
 
-ไปที่โฟลเดอร์:
-
-```
-Mini-Project-SSH
-```
-
-ตัวอย่าง (Windows):
-
-```
 cd Mini-Project-SSH
-```
 
----
+2) Build และรันระบบ
 
-### 2. รัน Docker Compose
-
-```
 docker compose up -d --build
-```
 
-ระบบจะทำการ:
+ระบบจะทำการ build และ start container ทั้งหมด เช่น SSH Server และ Backend
 
-* build SSH server container
-* build PHP backend container
-* start containers ทั้งหมด
+3) ตรวจสอบ container ที่กำลังทำงาน
 
----
-
-### 3. ตรวจสอบว่า container ทำงาน
-
-```
 docker ps
-```
-
-ต้องเห็น:
-
-```
-ssh-server
-php-backend
-```
 
 ---
 
 ## วิธีเข้าใช้งานหน้าเว็บ
 
-เปิด Browser แล้วไปที่:
+เปิด Web Browser แล้วไปที่:
 
-```
 http://localhost:8080/frontend/index.html
-```
-
-จะเห็นหน้า:
-
-```
-SSH Web Terminal
-```
 
 ---
 
 ## ข้อมูลสำหรับ Login SSH
 
-ใช้ข้อมูลนี้:
-
-```
-Server IP: ssh-server
-Username: student
-Password: 1234
-```
+Server IP: ssh-server  
+Username: student  
+Password: 1234  
 
 ---
 
 ## วิธีใช้งาน
 
-1. เปิดเว็บ
-2. กรอกข้อมูล:
-
-```
-Server IP: ssh-server
-Username: student
-Password: 1234
-```
-
-3. เลือก command เช่น:
-
-```
-whoami
-uptime
-df -h
-free -m
-```
-
+1. เปิดหน้าเว็บ
+2. กรอกข้อมูล Server IP, Username และ Password
+3. เลือกหรือพิมพ์คำสั่งที่ต้องการ เช่น:
+   - whoami
+   - uptime
+   - df -h
+   - free -m
 4. กดปุ่ม Run
-
-5. ระบบจะแสดงผลลัพธ์ใน terminal บนหน้าเว็บ
+5. ระบบจะแสดงผลลัพธ์ในหน้าจอ Terminal บนหน้าเว็บ
 
 ---
 
 ## ตัวอย่างผลลัพธ์
 
-```
-$ whoami
-student
-```
+$ whoami  
+student  
 
----
-
-## วิธีหยุดโปรเจกต์
-
-```
-docker compose down
-```
+$ uptime  
+10:32:10 up 5 min, 1 user, load average: 0.00, 0.01, 0.05  
 
 ---
 
 ## สำหรับการนำเสนอ (Presentation)
 
-ขั้นตอน:
+ขั้นตอนสาธิต:
 
 1. เปิด Terminal
 2. เข้าโฟลเดอร์โปรเจกต์
 
-```
 cd Mini-Project-SSH
-```
 
-3. รัน
+3. รันระบบ
 
-```
 docker compose up -d --build
-```
 
-4. เปิด Browser
+4. เปิด Browser ไปที่
 
-```
 http://localhost:8080/frontend/index.html
-```
 
-5. Login ด้วย
+5. Login ด้วยข้อมูล
 
-```
-ssh-server
-student
-1234
-```
+ssh-server  
+student  
+1234  
 
-6. สาธิตการรันคำสั่ง เช่น
+6. ทดลองรันคำสั่ง เช่น
 
-```
-whoami
-uptime
-```
+whoami  
+uptime  
+df -h  
 
 ---
 
-## สรุปการทำงาน
+## สรุปการทำงานของระบบ
 
-Browser
-↓
-Frontend (HTML/JS)
-↓
-Backend (PHP)
-↓
-SSH Server (Docker Ubuntu)
-↓
-แสดงผลกลับหน้าเว็บ
+ลำดับการทำงานของระบบ:
 
----
+Browser  
+↓  
+Frontend (HTML / JavaScript)  
+↓  
+Backend (PHP + ssh2)  
+↓  
+SSH Server (Ubuntu Container)  
+↓  
+ส่งผลลัพธ์กลับมาแสดงบนหน้าเว็บ  
+
+โปรเจกต์นี้แสดงให้เห็นการเชื่อมต่อระหว่าง Web Application กับ SSH Server ผ่าน Docker และการจัดการระบบแบบ Containerized Environment
