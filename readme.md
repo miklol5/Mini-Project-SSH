@@ -210,7 +210,3 @@ SSH Server (Docker Ubuntu)
 แสดงผลกลับหน้าเว็บ
 
 ---
-
-## ผู้พัฒนา
-
-Mini Project SSH Web Termina
